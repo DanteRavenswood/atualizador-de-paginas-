@@ -1,206 +1,430 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Menu Lateral com Nomes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ingles - Upload de Imagens</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
-
-    html, body {
+    body {
+      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Montserrat', sans-serif;
-      overflow-x: hidden;
+      padding: 20px;
+      padding-top: 60px;
+      background-color: #f5f5f5;
+      color: #333;
     }
 
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* Botão da bola */
-    .menu-toggle {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      width: 50px;
-      height: 50px;
-      background-color: #2b4a27;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 1001;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s ease;
-    }
-
-    .menu-toggle:hover {
-      background-color: #3e9442;
-    }
-
-    .menu-toggle img {
-      width: 24px;
-      filter: brightness(0) invert(1);
-    }
-
-    /* Menu lateral */
-    .side-menu {
-      position: fixed;
-      top: 0;
-      left: -220px;
-      width: 220px;
-      height: 100%;
-      background: linear-gradient(135deg, #2b4a27, #3e9442, #546c4a);
-      background-size: 400% 400%;
-      animation: gradientAnimation 12s ease infinite;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
-      transition: left 0.3s ease;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 80px;
-      gap: 24px;
-    }
-
-    .side-menu.open {
-      left: 0;
-    }
-
-    .menu-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
       text-align: center;
-      gap: 6px;
+    }
+    
+    .titulo span {
+  color: #546c4a; /* verde escuro usado nos outros elementos */
+  font-size: 1em;
+  font-weight: bold;
+}
+
+
+    .titulo img {
+      height: 100px;
+      vertical-align: middle;
     }
 
-    .side-menu button {
+    .titulo span {
+      order: 1;
+    }
+
+    .post {
+      max-width: 100%;
+      margin: 20px auto;
+      background: #546c4a;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      color: white;
+    }
+
+    .post img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .like-section {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      justify-content: flex-start;
+    }
+
+    .like-button {
       background: none;
       border: none;
       cursor: pointer;
-      padding: 8px;
+      margin-right: 8px;
+    }
+
+    .like-button img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .like-count {
+      font-size: 1em;
+    }
+
+    /* Modal Styles */
+    .modal, .modal-step, .alert-modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content, .alert-content {
+      background-color: #546c4a;
+      padding: 20px;
+      border: none;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      color: white;
       border-radius: 10px;
-      transition: background 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .side-menu button:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: scale(1.1);
-    }
-
-    .side-menu img {
-      width: 28px;
-      filter: brightness(0) invert(1);
-      transition: transform 0.2s ease, filter 0.3s ease;
-    }
-
-    .side-menu button:hover img {
-      transform: scale(1.3);
-      filter: brightness(1) invert(0);
-    }
-
-    .menu-label {
+    .close {
       color: #ffffff;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-      transition: color 0.3s ease;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
-    .side-menu button:hover + .menu-label {
-      color: #f0f0f0;
+    .close:hover {
+      color: #aaaaaa;
     }
 
-    @keyframes gradientAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* Estilos para o botão de publicar */
+   #publish-btn {
+  background-color: #546c4a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#publish-btn:hover {
+  background-color: #455a3b;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+    .input-field {
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .modal-button {
+      padding: 10px 20px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .modal-button:hover {
+      background-color: #3b78c1;
+    }
+
+    /* Estilo para o botão de escolha de arquivo */
+    .file-input-wrapper {
+      display: inline-block;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+    }
+
+    .file-input-label {
+      background-color: #4a90e2;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .file-input-label:hover {
+      background-color: #3b78c1;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .titulo {
+        flex-direction: column;
+      }
+
+      .titulo img {
+        height: 80px;
+      }
+
+      .modal-content, .alert-content {
+        width: 90%;
+      }
     }
 
     @media (max-width: 480px) {
-      .side-menu {
-        width: 180px;
+      .titulo {
+        font-size: 1.5em;
       }
 
-      .menu-toggle {
-        width: 44px;
-        height: 44px;
+      #publish-btn {
+        font-size: 0.9em;
+        padding: 8px 16px;
       }
 
-      .menu-toggle img {
-        width: 20px;
-      }
-
-      .side-menu img {
-        width: 24px;
-      }
-
-      .menu-label {
-        font-size: 12px;
+      .modal-button {
+        font-size: 0.9em;
       }
     }
   </style>
 </head>
 <body>
-  <iframe id="tela" src="inicio.html"></iframe>
+  <div class="container">
+    <div class="titulo">
+  <img src="https://github.com/luanzinho0fc/feira-de-ciencias/blob/main/LogoMakerCa-1745319933968.png?raw=true" alt="Logo">
+  <span>Publicações</span>
+</div>
+    <!-- Botão de Publicar -->
+    <button id="publish-btn">Publicar</button>
+    <div id="posts-container"></div>
+  </div>
 
-  <!-- Botão da bola -->
-  <button class="menu-toggle" onclick="toggleMenu()">
-    <img src="https://cdn-icons-png.flaticon.com/128/1828/1828859.png" alt="Menu">
-  </button>
-
-  <!-- Menu lateral com nomes -->
-  <div class="side-menu" id="sideMenu">
-    <div class="menu-item">
-      <button onclick="mudarPagina('inicio.html')">
-        <img src="https://cdn-icons-png.flaticon.com/128/3917/3917032.png" alt="Início">
-      </button>
-      <div class="menu-label">Início</div>
-    </div>
-    <div class="menu-item">
-      <button onclick="mudarPagina('video.html')">
-        <img src="https://cdn-icons-png.flaticon.com/128/4406/4406124.png" alt="Vídeos">
-      </button>
-      <div class="menu-label">AudioLivro</div>
-    </div>
-    <div class="menu-item">
-      <button onclick="mudarPagina('documentarios.html')">
-        <img src="https://cdn-icons-png.flaticon.com/128/1710/1710296.png" alt="Documentários">
-      </button>
-      <div class="menu-label">Docs</div>
-    </div>
-    <div class="menu-item">
-      <button onclick="mudarPagina('//danteravenswood.github.io/jogo-portugues/')">
-        <img src="https://cdn-icons-png.flaticon.com/128/12617/12617013.png" alt="jogos">
-      </button>
-      <div class="menu-label">Jogos </div>
+  <!-- Modal de Publicação -->
+  <div id="modal" class="modal-step">
+    <div class="modal-content">
+      <span class="close" id="close-modal">&times;</span>
+      <p><strong>Passo 1:</strong> Selecione uma imagem para enviar.</p>
+      <div class="file-input-wrapper">
+        <label class="file-input-label">Escolher Arquivo</label>
+        <input type="file" id="image-input" accept="image/*" class="input-field" required>
+      </div>
+      <button class="modal-button" id="next-step-1">Próximo</button>
     </div>
   </div>
 
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById('sideMenu');
-      menu.classList.toggle('open');
-    }
+  <!-- Modal para comentário -->
+  <div id="step-2" class="modal-step">
+    <div class="modal-content">
+      <span class="close" id="close-step-2">&times;</span>
+      <p><strong>Passo 2:</strong> Insira um comentário para a imagem:</p>
+      <input type="text" id="comment" class="input-field" placeholder="Escreva um comentário..." required>
+      <button class="modal-button" id="next-step-2">Publicar</button>
+    </div>
+  </div>
 
-    function mudarPagina(pagina) {
-      document.getElementById('tela').src = pagina;
-      document.getElementById('sideMenu').classList.remove('open');
-    }
+  <!-- Modal de Alerta -->
+  <div id="alert-modal" class="alert-modal">
+    <div class="alert-content">
+      <span class="close" id="close-alert">&times;</span>
+      <p id="alert-message"></p>
+      <button class="modal-button close-alert">OK</button>
+    </div>
+  </div>
 
-    window.onload = () => {
-      mudarPagina('inicio.html');
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+    import { getFirestore, doc, setDoc, collection, getDocs, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBb_aj9jIHJRO42bfiwZ8bwdRH7HTx1zx0",
+      authDomain: "studytask-de96f.firebaseapp.com",
+      projectId: "studytask-de96f",
+      storageBucket: "studytask-de96f.firebasestorage.app",
+      messagingSenderId: "200960149603",
+      appId: "1:200960149603:web:9b956822c318fb12765056",
+      measurementId: "G-QBCDVHMH87"
     };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    let currentStep = 1;
+    let likedPosts = new Set();
+
+    // Função para abrir o modal de publicação
+    function openPublishModal() {
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    document.getElementById('publish-btn').addEventListener('click', openPublishModal);
+
+    // Fechar modais
+    document.querySelectorAll('.close').forEach(closeBtn => {
+      closeBtn.onclick = function() {
+        closeBtn.closest('.modal, .modal-step, .alert-modal').style.display = 'none';
+      };
+    });
+
+    // Fechar alertas
+    document.querySelectorAll('.close-alert').forEach(alertBtn => {
+      alertBtn.onclick = function() {
+        document.getElementById('alert-modal').style.display = 'none';
+      }
+    });
+
+    // Função para avançar para o próximo passo
+    function nextStep() {
+      const currentModal = document.querySelector(`#step-${currentStep}`) || document.getElementById('modal');
+      if (currentModal) currentModal.style.display = 'none';
+
+      currentStep++;
+
+      if (currentStep > 2) {
+        publishImage();
+        return;
+      }
+
+      const nextModal = document.querySelector(`#step-${currentStep}`);
+      if (nextModal) nextModal.style.display = 'flex';
+    }
+
+    document.getElementById('next-step-1').addEventListener('click', nextStep);
+    document.getElementById('next-step-2').addEventListener('click', publishImage);
+
+    // Função para converter imagem para Base64 e publicar
+    async function publishImage() {
+      const file = document.getElementById("image-input").files[0];
+      const comment = document.getElementById('comment').value;
+
+      if (!file || !comment) {
+        showAlert("Por favor, preencha todos os campos!");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onloadend = async () => {
+        const base64String = reader.result.split(",")[1];
+        const imageLink = generateLink();
+
+        try {
+          await setDoc(doc(collection(db, "images ingles")), {
+            imageBase64: base64String,
+            imageLink: imageLink,
+            comment: comment,
+            likes: 0,
+            timestamp: new Date()
+          });
+          showAlert("Imagem publicada com sucesso!");
+          resetModal();
+          loadPosts();
+        } catch (error) {
+          showAlert("Erro ao publicar imagem: " + error.message);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    };
+
+    // Função para gerar um link único
+    const generateLink = () => {
+      return 'img_' + Math.random().toString(36).substring(2, 15);
+    };
+
+    // Resetar o modal
+    function resetModal() {
+      document.querySelectorAll('.modal-step').forEach(modal => modal.style.display = 'none');
+      currentStep = 1;
+      document.getElementById('image-input').value = '';
+      document.getElementById('comment').value = '';
+    }
+
+    // Função para mostrar alertas
+    function showAlert(message) {
+      document.getElementById('alert-message').textContent = message;
+      document.getElementById('alert-modal').style.display = 'flex';
+    }
+
+    // Carregar posts do Firebase
+    async function loadPosts() {
+      const postsContainer = document.getElementById('posts-container');
+      postsContainer.innerHTML = '';
+
+      const q = query(collection(db, "images ingles"), orderBy("timestamp", "desc"));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const post = doc.data();
+        const postId = doc.id;
+
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        postElement.innerHTML = `
+          <img src="data:image/png;base64,${post.imageBase64}" alt="Imagem publicada">
+          <p>${post.comment}</p>
+          <div class="like-section">
+            <button class="like-button" onclick="curtirPost('${postId}', '${doc.id}')">
+              <img src="https://cdn-icons-png.flaticon.com/128/11301/11301961.png" alt="Curtir">
+            </button>
+            <span id="like-count-${postId}" class="like-count">${post.likes} curtidas</span>
+          </div>
+        `;
+
+        postsContainer.appendChild(postElement);
+      });
+    }
+
+    // Função global para curtir o post
+    window.curtirPost = async function(postId, docId) {
+      if (likedPosts.has(postId)) {
+        showAlert("Você já curtiu esse post!");
+        return;
+      }
+
+      likedPosts.add(postId);
+
+      const likeCountElement = document.getElementById(`like-count-${postId}`);
+      let likes = parseInt(likeCountElement.textContent);
+      likes++;
+      likeCountElement.textContent = `${likes} curtidas`;
+
+      const postRef = doc(db, "images", docId);
+      await updateDoc(postRef, {
+        likes: likes
+      });
+    }
+
+    // Carregar posts ao iniciar
+    loadPosts();
   </script>
 </body>
 </html>
